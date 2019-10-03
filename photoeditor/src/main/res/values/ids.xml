@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="highlights_control" type="id" />
+    <item name="shadows_control" type="id" />
+
+    <item name="tag_blur_type" type="id" />
+    <item name="tag_curve_type" type="id" />
+    <item name="tag_textview" type="id" />
+</resources>

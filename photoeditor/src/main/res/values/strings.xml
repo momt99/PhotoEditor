@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">PhotoEditor</string>
+
+    <string-array name="adjust_labels">
+        <item>Enhance</item>
+        <item>Exposure</item>
+        <item>Contrast</item>
+        <item>Warmth</item>
+        <item>Saturation</item>
+        <item>Fade</item>
+        <item>Vignette</item>
+        <item>Grain</item>
+        <item>Sharpen</item>
+        <item>Shadows</item>
+        <item>Highlights</item>
+    </string-array>
+
+    <string name="label_enhance">Enhance</string>
+    <string name="label_exposure">Exposure</string>
+    <string name="label_contrast">Contrast</string>
+    <string name="label_warmth">Warmth</string>
+    <string name="label_saturation">Saturation</string>
+    <string name="label_fade">Fade</string>
+    <string name="label_vignette">Vignette</string>
+    <string name="label_grain">Grain</string>
+    <string name="label_sharpen">Sharpen</string>
+    <string name="label_shadows">Shadows</string>
+    <string name="label_highlights">Highlights</string>
+</resources>

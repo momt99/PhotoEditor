@@ -1,6 +1,5 @@
 package com.felan.photoeditor.widgets
 
-import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
@@ -11,11 +10,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.*
 import android.widget.LinearLayout
+import android.widget.LinearLayout.VERTICAL
 import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatRadioButton
 import androidx.core.view.ViewCompat
 import androidx.core.widget.CompoundButtonCompat
+import androidx.core.widget.NestedScrollView
 import com.felan.photoeditor.R
 import com.felan.photoeditor.utils.setOnEndListener
 import kotlin.reflect.KMutableProperty1
@@ -23,21 +24,26 @@ import kotlin.reflect.jvm.isAccessible
 
 class PhotoAdjustControlsView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : LinearLayout(context, attrs, defStyleAttr) {
+) : NestedScrollView(context, attrs, defStyleAttr) {
 
-    private var filterableImageView: FilterableImageView? = null
+    private var boundFilterableImageView: FilterableImageView? = null
+
+    private val mainContainer: LinearLayout
 
     init {
-        orientation = VERTICAL
-        setBackgroundColor(0x50000000)
+        mainContainer = LinearLayout(context).apply {
+            orientation = VERTICAL
+        }
+
+        addView(mainContainer, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
     }
 
     private val textShowAnimation = AnimationUtils.loadAnimation(context, R.anim.text_show)
 
     private val textHideAnimation = AnimationUtils.loadAnimation(context, R.anim.text_hide)
 
-    fun initItems(img: FilterableImageView) {
-        filterableImageView = img
+    fun bindWith(img: FilterableImageView) {
+        boundFilterableImageView = img
 
         val lp = LayoutParams(
             LayoutParams.MATCH_PARENT,
@@ -54,17 +60,17 @@ class PhotoAdjustControlsView @JvmOverloads constructor(
             FilterableImageView::grainValue,
             FilterableImageView::sharpenValue
         ).forEach { prop ->
-            addView(
+            mainContainer.addView(
                 createSeekBarForProperty(prop, img),
                 ViewGroup.LayoutParams(lp)
             )
         }
 
-        addView(
+        mainContainer.addView(
             createSeekBarForProperty(FilterableImageView::shadowsValue, img, R.id.shadows_control),
             ViewGroup.LayoutParams(lp)
         )
-        addView(
+        mainContainer.addView(
             createColorRadiosForProperty(
                 intArrayOf(
                     0x00000000, -0xb2b3, -0xb7fde, -0x3300, -0x7e2d7f,
@@ -75,7 +81,7 @@ class PhotoAdjustControlsView @JvmOverloads constructor(
             ), ViewGroup.LayoutParams(lp)
         )
 
-        addView(
+        mainContainer.addView(
             createSeekBarForProperty(
                 FilterableImageView::highlightsValue,
                 img,
@@ -83,7 +89,7 @@ class PhotoAdjustControlsView @JvmOverloads constructor(
             ),
             ViewGroup.LayoutParams(lp)
         )
-        addView(
+        mainContainer.addView(
             createColorRadiosForProperty(
                 intArrayOf(
                     0x00000000, -0x106d7a, -0x15315e, -0xd1e84, -0x5b1252,

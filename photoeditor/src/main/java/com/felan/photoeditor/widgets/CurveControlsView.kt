@@ -31,6 +31,7 @@ class CurveControlsView @JvmOverloads constructor(
         )
     }
 
+    private val curveViewContainer: FrameLayout
     private lateinit var curveView: CurveView
 
     private val allRadioButtons: Array<RadioButton>
@@ -38,9 +39,21 @@ class CurveControlsView @JvmOverloads constructor(
     private var boundFilterableImageView: FilterableImageView? = null
 
     init {
+        curveViewContainer = FrameLayout(context)
+        addView(curveViewContainer,
+            MarginLayoutParams(
+                LayoutParams.MATCH_PARENT,
+                LayoutParams.MATCH_PARENT
+            ).apply { bottomMargin = resources.getDimensionPixelSize(R.dimen.height_controls) }
+        )
+
         addView(
             typeSelectionLayout,
-            LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, Gravity.BOTTOM)
+            LayoutParams(
+                LayoutParams.MATCH_PARENT,
+                resources.getDimensionPixelSize(R.dimen.height_controls),
+                Gravity.BOTTOM
+            )
         )
 
         val radioPairs = typeSelectionLayout.children
@@ -74,7 +87,7 @@ class CurveControlsView @JvmOverloads constructor(
         img.run {
             curveView = CurveView(context, img.curvesToolValue)
             curveView.setDelegate { img.requestRender() }
-            addView(
+            curveViewContainer.addView(
                 curveView,
                 LayoutParams(textureViewSize.width, textureViewSize.height, Gravity.CENTER)
             )

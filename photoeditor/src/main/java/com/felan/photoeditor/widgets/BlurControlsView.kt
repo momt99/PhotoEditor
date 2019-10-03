@@ -28,22 +28,37 @@ class BlurControlsView @JvmOverloads constructor(
         Utilities.makeRadioButtonsForLabels(context, "Off", "Radial", "Linear")
     }
 
-    private val positionView by lazy { BlurPositionView(context) }
+    private val positionView: BlurPositionView
+
+    private val positionViewContainer: FrameLayout
 
     private val allRadioButtons: Array<RadioButton>
 
     private var boundFilterableImageView: FilterableImageView? = null
 
     init {
-
+        positionView = BlurPositionView(context)
+        positionViewContainer = FrameLayout(context).apply {
+            addView(
+                positionView,
+                LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, Gravity.CENTER)
+            )
+        }
         addView(
-            positionView,
-            LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, Gravity.CENTER)
+            positionViewContainer,
+            MarginLayoutParams(
+                LayoutParams.MATCH_PARENT,
+                LayoutParams.MATCH_PARENT
+            ).apply { bottomMargin = resources.getDimensionPixelSize(R.dimen.height_controls) }
         )
 
         addView(
             typeSelectionLayout,
-            LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, Gravity.BOTTOM)
+            LayoutParams(
+                LayoutParams.MATCH_PARENT,
+                resources.getDimensionPixelSize(R.dimen.height_controls),
+                Gravity.BOTTOM
+            )
         )
 
         val radioPairs = typeSelectionLayout.children
@@ -94,7 +109,7 @@ class BlurControlsView @JvmOverloads constructor(
     }
 
     private fun onPositionViewUpdated(args: BlurPositionView.ValueChangedEventArgs) =
-        boundFilterableImageView?.run {
+        boundFilterableImageView?.updateGrouped {
             blurExcludeSize = args.size
             blurExcludePoint = args.centerPoint
             blurExcludeBlurSize = args.falloff

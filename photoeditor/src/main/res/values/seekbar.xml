@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="Theme">
+        <attr name="mysSeekBarStyle" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="MySeekBar">
+        <attr name="barHeight" format="dimension" />
+        <attr name="thumbSize" format="dimension" />
+
+        <attr name="emptyBarColor" format="color" />
+        <attr name="emptyBarAlpha" format="float" />
+        <attr name="filledBarColor" format="color" />
+        <attr name="thumbColor" format="color" />
+
+        <attr name="enableMidPoint" format="boolean" />
+        <attr name="middlePointerThickness" format="dimension" />
+
+        <attr name="touchRadiusThreshold" format="dimension" />
+
+        <attr name="min" format="float" />
+        <attr name="max" format="float" />
+    </declare-styleable>
+
+    <dimen name="height_bar_default">2dp</dimen>
+    <dimen name="size_thumb_default">16dp</dimen>
+    <dimen name="thickness_middle_pointer">1dp</dimen>
+    <dimen name="threshold_touch_radius">12dp</dimen>
+
+    <style name="MySeekBarDefaultStyle">
+        <item name="barHeight">@dimen/height_bar_default</item>
+        <item name="thumbSize">@dimen/size_thumb_default</item>
+
+        <item name="emptyBarAlpha">0.38</item>
+        <item name="emptyBarColor">?colorAccent</item>
+        <item name="filledBarColor">?colorAccent</item>
+        <item name="thumbColor">?colorAccent</item>
+
+        <item name="enableMidPoint">false</item>
+        <item name="middlePointerThickness">@dimen/thickness_middle_pointer</item>
+
+        <item name="touchRadiusThreshold">@dimen/threshold_touch_radius</item>
+
+        <item name="min">0</item>
+        <item name="max">100</item>
+    </style>
+</resources>

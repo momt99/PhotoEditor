@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="height_adjust_item">48dp</dimen>
+    <dimen name="width_label">100dp</dimen>
+
+    <dimen name="margin_normal">16dp</dimen>
+    <dimen name="margin_small">8dp</dimen>
+
+    <dimen name="height_controls">200dp</dimen>
+</resources>

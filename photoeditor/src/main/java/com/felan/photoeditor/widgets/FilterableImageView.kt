@@ -128,6 +128,8 @@ class FilterableImageView @kotlin.jvm.JvmOverloads constructor(
 
     private val textureView: TextureView
 
+    private val textureContainer: FrameLayout
+
     private val layoutChangeListener =
         OnLayoutChangeListener { _, left, top, right, bottom, _, _, _, _ ->
             updateTextureViewSize(right - left, bottom - top)
@@ -138,16 +140,23 @@ class FilterableImageView @kotlin.jvm.JvmOverloads constructor(
             surfaceTextureListener = this@FilterableImageView
             isOpaque = true
         }
-        addView(
-            textureView,
-            LayoutParams(
-                LayoutParams.MATCH_PARENT,
-                LayoutParams.MATCH_PARENT,
-                Gravity.CENTER
+        textureContainer = FrameLayout(context).apply {
+            addView(
+                textureView,
+                LayoutParams(
+                    LayoutParams.MATCH_PARENT,
+                    LayoutParams.MATCH_PARENT,
+                    Gravity.CENTER
+                )
             )
+            addOnLayoutChangeListener(layoutChangeListener)
+        }
+        addView(textureContainer,
+            MarginLayoutParams(
+                LayoutParams.MATCH_PARENT,
+                LayoutParams.MATCH_PARENT
+            ).apply { bottomMargin = resources.getDimensionPixelSize(R.dimen.height_controls) }
         )
-
-        addOnLayoutChangeListener(layoutChangeListener)
     }
 
     //region Texture Callbacks
@@ -178,7 +187,7 @@ class FilterableImageView @kotlin.jvm.JvmOverloads constructor(
         get
         set(value) {
             field = value
-            updateTextureViewSize(width, height)
+            updateTextureViewSize(textureContainer.width, textureContainer.height)
             setupEGLThread(textureView.surfaceTexture, value)
         }
 
