@@ -1,4 +1,4 @@
-package com.felan.photoeditor.widgets
+package com.felan.photoeditor.widgets.filters
 
 import android.content.Context
 import android.content.res.ColorStateList
@@ -19,6 +19,7 @@ import androidx.core.widget.CompoundButtonCompat
 import androidx.core.widget.NestedScrollView
 import com.felan.photoeditor.R
 import com.felan.photoeditor.utils.setOnEndListener
+import com.felan.photoeditor.widgets.MySeekBar
 import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.jvm.isAccessible
 

@@ -1,4 +1,4 @@
-package com.felan.photoeditor.widgets
+package com.felan.photoeditor.widgets.filters
 
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -140,7 +140,8 @@ class CurvesToolValue {
     var blueCurve = CurvesValue()
     var curveBuffer: ByteBuffer
 
-    var activeType: CurveType = CurveType.LUMINANCE
+    var activeType: CurveType =
+        CurveType.LUMINANCE
 
     init {
         curveBuffer = ByteBuffer.allocateDirect(200 * 4)

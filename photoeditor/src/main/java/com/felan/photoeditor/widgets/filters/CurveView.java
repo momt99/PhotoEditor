@@ -6,7 +6,7 @@
  * Copyright Nikolai Kudashov, 2013-2018.
  */
 
-package com.felan.photoeditor.widgets;
+package com.felan.photoeditor.widgets.filters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

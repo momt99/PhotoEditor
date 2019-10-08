@@ -91,14 +91,19 @@ class MySeekBar @JvmOverloads constructor(
     val progressChanged = EventHandler<ProgressChangedEventArgs>()
     var rawProgress: Float by RangedProperty(0f, 1f, ViewInvalidatorProperty(0f, invalidator = {
         it.invalidate()
-        progressChanged(ProgressChangedEventArgs(rawProgress, progress))
+        progressChanged(
+            ProgressChangedEventArgs(
+                rawProgress,
+                progress
+            )
+        )
     }))
 
     init {
         val a = context.obtainStyledAttributes(
             attrs,
             R.styleable.MySeekBar,
-            R.attr.mysSeekBarStyle,
+            R.attr.mySeekBarStyle,
             R.style.MySeekBarDefaultStyle
         )
 

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="RotationWheel">
+        <attr name="primaryColor" format="color" />
+        <attr name="secondaryColor" format="color" />
+
+        <attr name="centerLineThickness" format="dimension" />
+        <attr name="otherLinesThickness" format="dimension" />
+        <attr name="cursorLineThickness" format="dimension" />
+
+        <attr name="centerLineHeight" format="dimension">
+            <enum name="match_parent" value="-1" />
+        </attr>
+        <attr name="otherLinesHeight" format="dimension">
+            <enum name="match_parent" value="-1" />
+        </attr>
+        <attr name="cursorLineHeight" format="dimension">
+            <enum name="match_parent" value="-1" />
+        </attr>
+
+        <attr name="selectRangeMin" format="float" />
+        <attr name="selectRangeMax" format="float" />
+
+        <attr name="unrealityScale" format="float" />
+    </declare-styleable>
+
+    <style name="RotationWheelDefaultStyle">
+        <item name="primaryColor">?android:textColorPrimary</item>
+        <item name="secondaryColor">?colorAccent</item>
+
+        <item name="centerLineThickness">2dp</item>
+        <item name="otherLinesThickness">1dp</item>
+        <item name="cursorLineThickness">3dp</item>
+
+
+        <item name="centerLineHeight">match_parent</item>
+        <item name="otherLinesHeight">match_parent</item>
+        <item name="cursorLineHeight">match_parent</item>
+
+        <item name="selectRangeMin">-360</item>
+        <item name="selectRangeMax">360</item>
+
+        <item name="unrealityScale">1.0</item>
+    </style>
+</resources>

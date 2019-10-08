@@ -1,4 +1,4 @@
-package com.felan.photoeditor.widgets
+package com.felan.photoeditor.widgets.filters
 
 import android.content.Context
 import android.graphics.Color
@@ -13,6 +13,7 @@ import androidx.core.view.children
 import androidx.core.view.updateLayoutParams
 import com.felan.photoeditor.R
 import com.felan.photoeditor.utils.Utilities
+import com.felan.photoeditor.widgets.CustomRadioGroupCheckedListener
 
 typealias CurveType = CurvesToolValue.CurveType
 
@@ -65,7 +66,8 @@ class CurveControlsView @JvmOverloads constructor(
 
         allRadioButtons = radioPairs.map { it.first }.toTypedArray()
 
-        val checkedListener = CustomRadioGroupCheckedListener(radioPairs, this)
+        val checkedListener =
+            CustomRadioGroupCheckedListener(radioPairs, this)
 
         radioPairs.asSequence()
             .map { it.first }
@@ -75,7 +77,8 @@ class CurveControlsView @JvmOverloads constructor(
             }
     }
 
-    var curveType: CurvesToolValue.CurveType = CurveType.LUMINANCE
+    var curveType: CurvesToolValue.CurveType =
+        CurvesToolValue.CurveType.LUMINANCE
         get
         set(value) {
             field = value
@@ -85,7 +88,8 @@ class CurveControlsView @JvmOverloads constructor(
 
     fun bindWith(img: FilterableImageView) =
         img.run {
-            curveView = CurveView(context, img.curvesToolValue)
+            curveView =
+                CurveView(context, img.curvesToolValue)
             curveView.setDelegate { img.requestRender() }
             curveViewContainer.addView(
                 curveView,

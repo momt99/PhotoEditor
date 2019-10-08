@@ -1,20 +1,18 @@
-package com.felan.photoeditor.widgets
+package com.felan.photoeditor.widgets.filters
 
 import android.content.Context
 import android.util.AttributeSet
 import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
 import android.widget.FrameLayout
 import android.widget.RadioButton
 import android.widget.TextView
-import androidx.appcompat.widget.AppCompatRadioButton
 import androidx.core.view.children
 import androidx.core.view.updateLayoutParams
 import com.felan.photoeditor.R
 import com.felan.photoeditor.utils.Utilities
+import com.felan.photoeditor.widgets.CustomRadioGroupCheckedListener
 
 class BlurControlsView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -68,7 +66,8 @@ class BlurControlsView @JvmOverloads constructor(
                 }
             }.toList()
 
-        val checkedListener = CustomRadioGroupCheckedListener(radioPairs, this)
+        val checkedListener =
+            CustomRadioGroupCheckedListener(radioPairs, this)
 
         allRadioButtons = radioPairs.map { it.first }.toTypedArray()
 
@@ -81,7 +80,8 @@ class BlurControlsView @JvmOverloads constructor(
         positionView.valueChanged += { args -> onPositionViewUpdated(args) }
     }
 
-    var blurType: BlurType = BlurType.NONE
+    var blurType: BlurType =
+        BlurType.NONE
         get
         set(value) {
             field = value

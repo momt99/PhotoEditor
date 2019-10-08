@@ -1,4 +1,4 @@
-package com.felan.photoeditor.widgets
+package com.felan.photoeditor.widgets.filters
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -6,21 +6,16 @@ import android.graphics.Color
 import android.graphics.PointF
 import android.graphics.SurfaceTexture
 import android.util.AttributeSet
-import android.util.Size
 import android.view.Gravity
 import android.view.TextureView
-import android.view.View
-import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.annotation.ColorInt
 import androidx.core.view.updateLayoutParams
 import com.felan.photoeditor.R
 import com.felan.photoeditor.utils.EventHandler
 import com.felan.photoeditor.utils.RangedProperty
-import com.felan.photoeditor.utils.SizeFX
 import com.felan.photoeditor.utils.SizeX
 import kotlin.math.PI
-import kotlin.math.max
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
@@ -30,7 +25,12 @@ class FilterableImageView @kotlin.jvm.JvmOverloads constructor(
 
     //region Adjust values
 
-    var enhanceValue: Float by AdjustParamProperty(0f, 0f, 100f, R.string.label_enhance) //0 100
+    var enhanceValue: Float by AdjustParamProperty(
+        0f,
+        0f,
+        100f,
+        R.string.label_enhance
+    ) //0 100
 
 
     var exposureValue: Float by AdjustParamProperty(
@@ -49,7 +49,12 @@ class FilterableImageView @kotlin.jvm.JvmOverloads constructor(
     ) //-100 100
 
 
-    var warmthValue: Float by AdjustParamProperty(0f, -100f, 100f, R.string.label_warmth) //-100 100
+    var warmthValue: Float by AdjustParamProperty(
+        0f,
+        -100f,
+        100f,
+        R.string.label_warmth
+    ) //-100 100
 
 
     var saturationValue: Float by AdjustParamProperty(
@@ -60,7 +65,12 @@ class FilterableImageView @kotlin.jvm.JvmOverloads constructor(
     ) //-100 100
 
 
-    var fadeValue: Float by AdjustParamProperty(0f, 0f, 100f, R.string.label_fade) // 0 100
+    var fadeValue: Float by AdjustParamProperty(
+        0f,
+        0f,
+        100f,
+        R.string.label_fade
+    ) // 0 100
 
 
     @get: ColorInt
@@ -95,26 +105,47 @@ class FilterableImageView @kotlin.jvm.JvmOverloads constructor(
     ) //-100 100
 
 
-    var vignetteValue: Float by AdjustParamProperty(0f, 0f, 100f, R.string.label_vignette) //0 100
+    var vignetteValue: Float by AdjustParamProperty(
+        0f,
+        0f,
+        100f,
+        R.string.label_vignette
+    ) //0 100
 
 
-    var grainValue: Float by AdjustParamProperty(0f, 0f, 100f, R.string.label_grain) //0 100
+    var grainValue: Float by AdjustParamProperty(
+        0f,
+        0f,
+        100f,
+        R.string.label_grain
+    ) //0 100
 
 
-    var sharpenValue: Float by AdjustParamProperty(0f, 0f, 100f, R.string.label_sharpen) //0 100
+    var sharpenValue: Float by AdjustParamProperty(
+        0f,
+        0f,
+        100f,
+        R.string.label_sharpen
+    ) //0 100
 
 
     //endregion
 
     //region Blur values
 
-    var blurType: BlurType by RequestRenderProperty(BlurType.NONE)
+    var blurType: BlurType by RequestRenderProperty(
+        BlurType.NONE
+    )
 
     var blurExcludeSize: Float by RequestRenderProperty(0.35f)
 
-    var blurExcludePoint: PointF by RequestRenderProperty(PointF(0.5f, 0.5f))
+    var blurExcludePoint: PointF by RequestRenderProperty(
+        PointF(0.5f, 0.5f)
+    )
 
-    var blurExcludeBlurSize: Float by RequestRenderProperty(0.15f)
+    var blurExcludeBlurSize: Float by RequestRenderProperty(
+        0.15f
+    )
 
     var blurAngle: Float by RequestRenderProperty(PI.toFloat() / 2.0f)
 
@@ -122,7 +153,8 @@ class FilterableImageView @kotlin.jvm.JvmOverloads constructor(
 
     //region Curve values
 
-    var curvesToolValue: CurvesToolValue = CurvesToolValue()
+    var curvesToolValue: CurvesToolValue =
+        CurvesToolValue()
 
     //endregion
 
@@ -151,11 +183,9 @@ class FilterableImageView @kotlin.jvm.JvmOverloads constructor(
             )
             addOnLayoutChangeListener(layoutChangeListener)
         }
-        addView(textureContainer,
-            MarginLayoutParams(
-                LayoutParams.MATCH_PARENT,
-                LayoutParams.MATCH_PARENT
-            ).apply { bottomMargin = resources.getDimensionPixelSize(R.dimen.height_controls) }
+        addView(
+            textureContainer,
+            LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
         )
     }
 
@@ -253,7 +283,10 @@ class AdjustParamProperty<T : Comparable<T>>(
     minValue: T,
     maxValue: T,
     val labelResource: Int = 0
-) : RangedProperty<FilterableImageView, T>(minValue, maxValue, RequestRenderProperty(initialValue))
+) : RangedProperty<FilterableImageView, T>(
+    minValue, maxValue,
+    RequestRenderProperty(initialValue)
+)
 
 open class RequestRenderProperty<T>(initialValue: T) :
     ReadWriteProperty<FilterableImageView, T> {
