@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="MyColorPicker">
+        <attr name="barHeight" />
+        <attr name="thumbBackgroundColor" format="color" />
+        <attr name="thumbRadius" format="dimension" />
+        <attr name="thumbColorMaxRadiusFactor" format="float" />
+        <attr name="thumbColorMinRadiusFactor" format="float" />
+        <attr name="thumbExpansionFactor" format="float" />
+        <attr name="thumbExpansionDistance" format="dimension" />
+        <attr name="thumbWeightChangeDistance" format="dimension" />
+
+    </declare-styleable>
+
+    <style name="MyColorPickerDefaultStyle">
+        <item name="barHeight">12dp</item>
+        <item name="thumbBackgroundColor">?colorSurface</item>
+        <item name="thumbRadius">12dp</item>
+        <item name="thumbColorMaxRadiusFactor">0.9</item>
+        <item name="thumbColorMinRadiusFactor">0.1</item>
+        <item name="thumbExpansionFactor">1.75</item>
+        <item name="thumbExpansionDistance">100dp</item>
+        <item name="thumbWeightChangeDistance">38dp</item>
+    </style>
+</resources>

@@ -7,4 +7,7 @@
     <dimen name="margin_small">8dp</dimen>
 
     <dimen name="height_controls">200dp</dimen>
+    <dimen name="width_brush_item">250dp</dimen>
+
+    <dimen name="width_stroke_text_type">2dp</dimen>
 </resources>

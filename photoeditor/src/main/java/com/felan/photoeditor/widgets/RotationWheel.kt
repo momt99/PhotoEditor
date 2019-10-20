@@ -17,6 +17,7 @@ import com.felan.photoeditor.R
 import com.felan.photoeditor.utils.EventHandler
 import com.felan.photoeditor.utils.RangedProperty
 import com.felan.photoeditor.utils.ViewInvalidatorProperty
+import com.felan.photoeditor.utils.viewInvalidator
 import java.lang.Exception
 import kotlin.math.*
 
@@ -51,9 +52,8 @@ class RotationWheel @JvmOverloads constructor(
 
     var centerLineThickness: Float by ViewInvalidatorProperty(0f)
     var otherLinesThickness: Float by ViewInvalidatorProperty(0f)
-    var cursorLineThickness: Float by ViewInvalidatorProperty(0f, invalidator = {
+    var cursorLineThickness: Float by viewInvalidator(0f, preInvalidate = { _, _ ->
         updateCursorRect(width, height)
-        invalidate()
     })
 
     var centerLineHeight: Float = -1f
@@ -88,9 +88,8 @@ class RotationWheel @JvmOverloads constructor(
 
     private var internalCenterLineHeight: Float by ViewInvalidatorProperty(0f)
     private var internalOtherLinesHeight: Float by ViewInvalidatorProperty(0f)
-    private var internalCursorLineHeight: Float by ViewInvalidatorProperty(0f, invalidator = {
+    private var internalCursorLineHeight: Float by viewInvalidator(0f, preInvalidate = { _, _ ->
         updateCursorRect(width, height)
-        invalidate()
     })
 
     val rotationStarted = EventHandler<RotationWheel>()
@@ -101,7 +100,7 @@ class RotationWheel @JvmOverloads constructor(
     var value: Float by RangedProperty(
         -360f,
         360f,
-        ViewInvalidatorProperty(0f, afterInvalidate = { _, value -> valueChanged(value) })
+        viewInvalidator(0f, postInvalidate = { _, value -> valueChanged(value) })
     )
 
     var selectRangeMin by RangedProperty(-360f, 360f, 0f)
@@ -142,6 +141,8 @@ class RotationWheel @JvmOverloads constructor(
 
         selectRangeMin = a.getFloatOrThrow(R.styleable.RotationWheel_selectRangeMin)
         selectRangeMax = a.getFloatOrThrow(R.styleable.RotationWheel_selectRangeMax)
+
+        unrealityScale = a.getFloat(R.styleable.RotationWheel_unrealityScale, 1f)
 
         a.recycle()
     }

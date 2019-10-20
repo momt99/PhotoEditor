@@ -14,4 +14,6 @@ class EventHandler<TEventArgs> {
     operator fun invoke(e: TEventArgs) {
         handlers.forEach { it.invoke(e) }
     }
+
+    fun clearHandlers() = handlers.clear()
 }

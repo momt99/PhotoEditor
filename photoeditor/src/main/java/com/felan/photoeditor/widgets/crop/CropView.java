@@ -717,7 +717,7 @@ public class CropView extends FrameLayout implements CropAreaView.AreaViewListen
         rotationStartScale = 0.0f;
     }
 
-    public void setRotation(float angle) {
+    public void setImageRotation(float angle) {
         float deltaAngle = angle - state.getRotation();
         state.rotate(deltaAngle, 0, 0);
         fitContentInBounds(true, true, false);
@@ -754,6 +754,11 @@ public class CropView extends FrameLayout implements CropAreaView.AreaViewListen
 
     public void setLockedAspectRatio(float aspectRatio) {
         areaView.setLockedAspectRatio(aspectRatio);
+        if (aspectRatio == 0) {
+            if (listener != null)
+                listener.onAspectLock(false);
+            return;
+        }
         RectF targetRect = new RectF();
         areaView.calculateRect(targetRect, aspectRatio);
         fillAreaView(targetRect, true);
@@ -797,5 +802,10 @@ public class CropView extends FrameLayout implements CropAreaView.AreaViewListen
 
     public float getCropHeight() {
         return areaView.getCropHeight();
+    }
+
+
+    public float getOriginalRatio() {
+        return areaView.getAspectRatio();
     }
 }

@@ -3,5 +3,6 @@
     <declare-styleable name="Theme">
         <attr name="mySeekBarStyle" format="reference" />
         <attr name="rotationWheelStyle" format="reference" />
+        <attr name="colorPickerStyle" format="reference" />
     </declare-styleable>
 </resources>

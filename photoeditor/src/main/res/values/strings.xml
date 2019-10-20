@@ -26,4 +26,36 @@
     <string name="label_sharpen">Sharpen</string>
     <string name="label_shadows">Shadows</string>
     <string name="label_highlights">Highlights</string>
+    <string name="undo">Undo</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
+    <string name="duplicate">Duplicate</string>
+
+    <string name="outlined">Outlined</string>
+    <string name="regular">Regular</string>
+    <string name="reset">Reset</string>
+
+    <string-array name="aspect_ratios">
+        <item>0:1</item>
+        <item>-1:-1</item>
+        <item>1:1</item>
+        <item>3:2</item>
+        <item>5:3</item>
+        <item>4:3</item>
+        <item>5:4</item>
+        <item>7:5</item>
+        <item>16:9</item>
+    </string-array>
+
+    <string-array name="aspect_ratios_labels">
+        <item>Off</item>
+        <item>Original</item>
+        <item>Square</item>
+        <item>3:2</item>
+        <item>5:3</item>
+        <item>4:3</item>
+        <item>5:4</item>
+        <item>7:5</item>
+        <item>16:9</item>
+    </string-array>
 </resources>

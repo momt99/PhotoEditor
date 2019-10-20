@@ -16,6 +16,7 @@ import com.felan.photoeditor.R
 import com.felan.photoeditor.utils.EventHandler
 import com.felan.photoeditor.utils.RangedProperty
 import com.felan.photoeditor.utils.ViewInvalidatorProperty
+import com.felan.photoeditor.utils.viewInvalidator
 import kotlin.math.max
 
 
@@ -68,6 +69,7 @@ class MySeekBar @JvmOverloads constructor(
         thumbColor = color
     }
 
+    //Diameter
     var thumbSize: Float by ViewInvalidatorProperty(0f)
 
     var enableMiddlePoint: Boolean by ViewInvalidatorProperty(false)
@@ -89,15 +91,18 @@ class MySeekBar @JvmOverloads constructor(
     data class ProgressChangedEventArgs(val rawProgress: Float, val progress: Float)
 
     val progressChanged = EventHandler<ProgressChangedEventArgs>()
-    var rawProgress: Float by RangedProperty(0f, 1f, ViewInvalidatorProperty(0f, invalidator = {
-        it.invalidate()
-        progressChanged(
-            ProgressChangedEventArgs(
-                rawProgress,
-                progress
+    var rawProgress: Float by RangedProperty(
+        0f,
+        1f,
+        viewInvalidator(0f, postInvalidate = { v, value ->
+            progressChanged(
+                ProgressChangedEventArgs(
+                    value,
+                    progress
+                )
             )
-        )
-    }))
+        })
+    )
 
     init {
         val a = context.obtainStyledAttributes(
