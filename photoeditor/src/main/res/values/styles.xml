@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="ControlButtonStyle" parent="Widget.AppCompat.Button.Borderless">
+    <style name="ControlButtonStyle" parent="Widget.MaterialComponents.Button.TextButton">
 
     </style>
+
+    <style name="IconButton" parent="ControlButtonStyle">
+        <item name="android:minWidth">0dp</item>
+        <item name="tint">@color/secondary_selected</item>
+    </style>
+
 </resources>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+    <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+        <com.felan.photoeditor.widgets.filters.FilterableImageView
+                android:id="@+id/image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/height_controls"
+                android:padding="@dimen/margin_normal" />
+
+        <com.felan.photoeditor.widgets.filters.PhotoAdjustControlsView
+                android:id="@+id/controls_adjust"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_controls"
+                android:layout_gravity="bottom"
+                android:visibility="visible" />
+
+        <com.felan.photoeditor.widgets.filters.BlurControlsView
+                android:id="@+id/controls_blur"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone" />
+
+        <com.felan.photoeditor.widgets.filters.CurveControlsView
+                android:id="@+id/controls_curve"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone" />
+
+    </FrameLayout>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/btn_adjust"
+                style="@style/IconButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/tool_adjust_black_24" />
+
+
+        <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/btn_blur"
+                style="@style/IconButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/tool_blur_black_24" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/btn_curve"
+                style="@style/IconButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/tool_curve" />
+
+    </LinearLayout>
+</LinearLayout>

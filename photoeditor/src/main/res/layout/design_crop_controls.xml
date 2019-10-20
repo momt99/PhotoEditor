@@ -19,7 +19,7 @@
                 android:layout_gravity="bottom"
                 android:background="?selectableItemBackground"
                 android:src="@drawable/ic_image_aspect_ratio"
-                app:tint="?colorOnSurface" />
+                app:tint="@color/secondary_selected" />
 
         <LinearLayout
                 android:layout_width="0dp"
@@ -40,7 +40,7 @@
             <com.felan.photoeditor.widgets.RotationWheel
                     android:id="@+id/wheel_rotate"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="32dp"
                     android:layout_marginTop="@dimen/margin_small"
                     app:selectRangeMax="45"
                     app:selectRangeMin="-45"

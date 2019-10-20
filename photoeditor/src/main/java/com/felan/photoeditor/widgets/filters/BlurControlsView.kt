@@ -12,11 +12,12 @@ import androidx.core.view.children
 import androidx.core.view.updateLayoutParams
 import com.felan.photoeditor.R
 import com.felan.photoeditor.utils.Utilities
+import com.felan.photoeditor.widgets.Bindable
 import com.felan.photoeditor.widgets.CustomRadioGroupCheckedListener
 
 class BlurControlsView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr), CompoundButton.OnCheckedChangeListener {
+) : FilterControlsView(context, attrs, defStyleAttr), CompoundButton.OnCheckedChangeListener {
 
     companion object {
         private val BLUR_TYPE_TAG_ID = R.id.tag_blur_type
@@ -90,7 +91,7 @@ class BlurControlsView @JvmOverloads constructor(
             boundFilterableImageView?.blurType = value
         }
 
-    fun bindWith(img: FilterableImageView) =
+    override fun bindWith(img: FilterableImageView) =
         img.run {
             boundFilterableImageView = this
             textureSizeChanged += { newSize ->

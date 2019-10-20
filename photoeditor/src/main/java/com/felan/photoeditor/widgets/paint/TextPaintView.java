@@ -34,7 +34,7 @@ public class TextPaintView extends EntityView {
         editText.setPadding(AndroidUtilities.dp(7), AndroidUtilities.dp(7), AndroidUtilities.dp(7), AndroidUtilities.dp(7));
         editText.setClickable(false);
         editText.setEnabled(false);
-        editText.setTextSize(TypedValue.COMPLEX_UNIT_PX, baseFontSize);
+        editText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
         editText.setText(text);
         editText.setTextColor(color);
         editText.setTypeface(null, Typeface.BOLD);
@@ -150,6 +150,10 @@ public class TextPaintView extends EntityView {
         updateColor();
     }
 
+    public boolean getStroke() {
+        return this.stroke;
+    }
+
     private void updateColor() {
         if (stroke) {
             editText.setTextColor(0xffffffff);
@@ -169,6 +173,12 @@ public class TextPaintView extends EntityView {
         float width = getWidth() * (getScale()) + AndroidUtilities.dp(46) / scale;
         float height = getHeight() * (getScale()) + AndroidUtilities.dp(20) / scale;
         return new Rect((position.x - width / 2.0f) * scale, (position.y - height / 2.0f) * scale, width * scale, height * scale);
+    }
+
+    @Override
+    public void setScaleX(float scaleX) {
+        super.setScaleX(scaleX);
+        editText.invalidate();
     }
 
     protected TextViewSelectionView createSelectionView() {

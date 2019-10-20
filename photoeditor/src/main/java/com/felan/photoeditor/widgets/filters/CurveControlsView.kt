@@ -13,17 +13,21 @@ import androidx.core.view.children
 import androidx.core.view.updateLayoutParams
 import com.felan.photoeditor.R
 import com.felan.photoeditor.utils.Utilities
+import com.felan.photoeditor.widgets.Bindable
 import com.felan.photoeditor.widgets.CustomRadioGroupCheckedListener
 
 typealias CurveType = CurvesToolValue.CurveType
 
-class CurveControlsView @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr), CompoundButton.OnCheckedChangeListener {
+class CurveControlsView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
+    FilterControlsView(context, attrs, defStyleAttr), CompoundButton.OnCheckedChangeListener {
 
     companion object {
         private val CURVE_TYPE_TAG_ID = R.id.tag_curve_type
     }
+
+    constructor(context: Context) : this(context, null)
+
+    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
     private val typeSelectionLayout by lazy {
         Utilities.makeRadioButtonsForLabels(
@@ -77,8 +81,8 @@ class CurveControlsView @JvmOverloads constructor(
             }
     }
 
-    var curveType: CurvesToolValue.CurveType =
-        CurvesToolValue.CurveType.LUMINANCE
+    var curveType: CurveType =
+        CurveType.LUMINANCE
         get
         set(value) {
             field = value
@@ -86,7 +90,7 @@ class CurveControlsView @JvmOverloads constructor(
             curveView.setActiveType(value)
         }
 
-    fun bindWith(img: FilterableImageView) =
+    override fun bindWith(img: FilterableImageView) =
         img.run {
             curveView =
                 CurveView(context, img.curvesToolValue)

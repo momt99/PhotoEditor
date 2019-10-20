@@ -51,7 +51,7 @@ class CropControlsView @JvmOverloads constructor(
     }
 
     init {
-        addView(controlsContainer, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+        addView(controlsContainer, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
 
         rotateButton.setOnClickListener { onRotateButtonClicked() }
 
@@ -90,17 +90,9 @@ class CropControlsView @JvmOverloads constructor(
 
     private var lastAspectRatioIndex = 0
 
-    private val aspectRatioButtonLockColor by lazy {
-        context.theme.getColorAttribute(R.attr.colorAccent, Color.BLACK)
-    }
-
-    private val aspectRatioButtonUnlockColor by lazy {
-        context.theme.getColorAttribute(R.attr.colorOnSurface, Color.BLACK)
-    }
 
     private fun updateAspectRationButtonColor(isOff: Boolean) {
-        aspectRatioButton.supportImageTintList =
-            ColorStateList.valueOf(if (isOff) aspectRatioButtonUnlockColor else aspectRatioButtonLockColor)
+        aspectRatioButton.isSelected = !isOff
     }
 
     private fun onAspectRationButtonClicked() {
@@ -127,4 +119,11 @@ class CropControlsView @JvmOverloads constructor(
         this.boundCropView = cropView
     }
 
+
+    var enableBottomPaddingBinding: Boolean = true
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        boundCropView?.setBottomPadding(h.toFloat())
+    }
 }

@@ -19,13 +19,14 @@ import androidx.core.widget.CompoundButtonCompat
 import androidx.core.widget.NestedScrollView
 import com.felan.photoeditor.R
 import com.felan.photoeditor.utils.setOnEndListener
+import com.felan.photoeditor.widgets.Bindable
 import com.felan.photoeditor.widgets.MySeekBar
 import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.jvm.isAccessible
 
 class PhotoAdjustControlsView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : NestedScrollView(context, attrs, defStyleAttr) {
+) : FilterControlsView(context, attrs, defStyleAttr) {
 
     private var boundFilterableImageView: FilterableImageView? = null
 
@@ -36,14 +37,24 @@ class PhotoAdjustControlsView @JvmOverloads constructor(
             orientation = VERTICAL
         }
 
-        addView(mainContainer, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
+        val scrollingContainer = NestedScrollView(context).apply {
+            addView(
+                mainContainer,
+                LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+            )
+        }
+
+        addView(
+            scrollingContainer,
+            LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+        )
     }
 
     private val textShowAnimation = AnimationUtils.loadAnimation(context, R.anim.text_show)
 
     private val textHideAnimation = AnimationUtils.loadAnimation(context, R.anim.text_hide)
 
-    fun bindWith(img: FilterableImageView) {
+    override fun bindWith(img: FilterableImageView) {
         boundFilterableImageView = img
 
         val lp = LayoutParams(

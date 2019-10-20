@@ -11,6 +11,7 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.os.Build;
+import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -199,8 +200,19 @@ public class CropView extends FrameLayout implements CropAreaView.AreaViewListen
     private CropViewListener listener;
 
     public CropView(Context context) {
-        super(context);
+        this(context, null, 0);
+    }
 
+    public CropView(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public CropView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init(context);
+    }
+
+    private void init(Context context) {
         previousAreaRect = new RectF();
         initialAreaRect = new RectF();
         presentationMatrix = new Matrix();

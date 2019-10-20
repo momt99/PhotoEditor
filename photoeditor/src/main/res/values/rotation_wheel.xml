@@ -26,8 +26,8 @@
     </declare-styleable>
 
     <style name="RotationWheelDefaultStyle">
-        <item name="primaryColor">?android:textColorPrimary</item>
-        <item name="secondaryColor">?colorAccent</item>
+        <item name="primaryColor">?colorOnSurface</item>
+        <item name="secondaryColor">?colorSecondary</item>
 
         <item name="centerLineThickness">2dp</item>
         <item name="otherLinesThickness">1dp</item>

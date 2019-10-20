@@ -70,6 +70,18 @@ public class EditTextOutline extends AppCompatEditText {
         invalidate();
     }
 
+    @Override
+    public void setScaleX(float scaleX) {
+        super.setScaleX(scaleX);
+        mUpdateCachedBitmap = true;
+    }
+
+    @Override
+    public void setScaleY(float scaleY) {
+        super.setScaleY(scaleY);
+        mUpdateCachedBitmap = true;
+    }
+
     protected void onDraw(Canvas canvas) {
         if (mCache != null && mStrokeColor != Color.TRANSPARENT) {
             if (mUpdateCachedBitmap) {
@@ -77,8 +89,9 @@ public class EditTextOutline extends AppCompatEditText {
                 final int h = getHeight();
                 final String text = getText().toString();
 
-                mCanvas.setBitmap(mCache);
-                mCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
+                Canvas mCanvas = canvas;
+//                mCanvas.setBitmap(mCache);
+//                mCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
 
                 float strokeWidth = mStrokeWidth > 0 ? mStrokeWidth : (float) Math.ceil(getTextSize() / 11.5f);
                 mPaint.setStrokeWidth(strokeWidth);
@@ -95,7 +108,7 @@ public class EditTextOutline extends AppCompatEditText {
                 sl.draw(mCanvas);
                 mCanvas.restore();
 
-                mUpdateCachedBitmap = false;
+//                mUpdateCachedBitmap = false;
             }
             canvas.drawBitmap(mCache, 0, 0, mPaint);
         }

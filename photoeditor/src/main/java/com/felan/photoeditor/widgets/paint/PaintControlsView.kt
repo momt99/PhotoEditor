@@ -16,7 +16,7 @@ class PaintControlsView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
-    private var boundPaintView: PhotoPaintView? = null
+    private var boundPaintRenderView: PhotoPaintRenderView? = null
 
     private val controlsContainer by lazy {
         LayoutInflater.from(context).inflate(
@@ -53,7 +53,7 @@ class PaintControlsView @JvmOverloads constructor(
     init {
         addView(controlsContainer, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
 
-        undoButton.setOnClickListener { boundPaintView?.undo() }
+        undoButton.setOnClickListener { boundPaintRenderView?.undo() }
 
         drawSwitchButton.setOnClickListener { switchToMode(PaintMode.DRAW) }
         textSwitchButton.setOnClickListener { switchToMode(PaintMode.TEXT) }
@@ -64,15 +64,15 @@ class PaintControlsView @JvmOverloads constructor(
         updateButtonsSelections(PaintMode.DRAW)
     }
 
-    fun bindWith(paintView: PhotoPaintView) {
-        this.boundPaintView = paintView
+    fun bindWith(paintRenderView: PhotoPaintRenderView) {
+        this.boundPaintRenderView = paintRenderView
         colorPicker.selectedColorChanged.clearHandlers()
-        colorPicker.selectedColorChanged += { paintView.setCurrentColor(it) }
+        colorPicker.selectedColorChanged += { paintRenderView.setCurrentColor(it) }
         colorPicker.selectedColorChanged(colorPicker.selectedColor)
         colorPicker.selectedWeightChanged.clearHandlers()
-        colorPicker.selectedWeightChanged += { paintView.setCurrentBrushWeight(it) }
+        colorPicker.selectedWeightChanged += { paintRenderView.setCurrentBrushWeight(it) }
         colorPicker.selectedWeightChanged(colorPicker.selectedWeight)
-        paintView.paintModeChanged += { currentPaintMode = it }
+        paintRenderView.paintModeChanged += { currentPaintMode = it }
     }
 
     enum class PaintMode {
@@ -86,7 +86,7 @@ class PaintControlsView @JvmOverloads constructor(
                 return
             field = value
             updateButtonsSelections(value)
-            boundPaintView?.run { colorPicker.setCurrentColor(currentColor) }
+            boundPaintRenderView?.run { colorPicker.setCurrentColor(currentColor) }
             println("Mode changed to:$value")
         }
 
@@ -105,7 +105,7 @@ class PaintControlsView @JvmOverloads constructor(
         }
     }
 
-    fun switchToMode(mode: PaintMode) = boundPaintView?.run {
+    fun switchToMode(mode: PaintMode) = boundPaintRenderView?.run {
         when (mode) {
             PaintMode.DRAW -> {
                 switchToDraw()
@@ -117,7 +117,8 @@ class PaintControlsView @JvmOverloads constructor(
         currentPaintMode = mode
     }
 
-    private fun brushTypeButtonClicked() =
+
+    private val brushTypePopup by lazy {
         ListPopupWindow(context).apply {
             setAdapter(object : BaseAdapter() {
                 val previewImages = intArrayOf(
@@ -133,9 +134,9 @@ class PaintControlsView @JvmOverloads constructor(
                     view.findViewById<ImageView>(R.id.image)
                         .setImageResource(previewImages[position])
                     view.findViewById<RadioButton>(R.id.radio).isChecked =
-                        boundPaintView?.currentBrush == position
+                        boundPaintRenderView?.currentBrush == position
                     view.setOnClickListener {
-                        boundPaintView?.setBrush(position)
+                        boundPaintRenderView?.setBrush(position)
                         dismiss()
                     }
                     return view
@@ -149,54 +150,59 @@ class PaintControlsView @JvmOverloads constructor(
             })
             width = (resources.getDimensionPixelSize(R.dimen.width_brush_item))
             anchorView = brushTypeButton
-            show()
         }
-
-
-    private fun textTypeButtonClicked() = ListPopupWindow(context).apply {
-        setAdapter(object : BaseAdapter() {
-            override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-                val view = convertView ?: LayoutInflater.from(context)
-                    .inflate(R.layout.item_text_type, parent, false)
-
-                val stroke = position == 0
-
-                view.findViewById<FrameLayout>(R.id.text_place).apply {
-                    removeAllViews()
-                    isFocusable = true
-                    addView(EditTextOutline(context).apply {
-                        setBackgroundColor(Color.TRANSPARENT)
-                        isEnabled = false
-                        isClickable = false
-                        isFocusable = false
-                        isFocusableInTouchMode = false
-                        setStrokeWidth(resources.getDimension(R.dimen.width_stroke_text_type))
-                        setTextColor(if (stroke) Color.WHITE else Color.BLACK)
-                        setStrokeColor(if (stroke) Color.BLACK else Color.TRANSPARENT)
-                        setPadding(0, 0, 0, 0)
-                        setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
-                        setTypeface(null, Typeface.BOLD)
-                        setText(if (stroke) R.string.outlined else R.string.regular)
-                    }, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
-                }
-                view.findViewById<RadioButton>(R.id.radio).isChecked =
-                    boundPaintView?.selectedStroke == stroke
-                view.setOnClickListener {
-                    boundPaintView?.setStroke(stroke)
-                    dismiss()
-                }
-                return view
-            }
-
-            override fun getItem(position: Int): Any? = null
-
-            override fun getItemId(position: Int): Long = position.toLong()
-
-            override fun getCount(): Int = 2
-        })
-        width = (resources.getDimensionPixelSize(R.dimen.width_brush_item))
-        anchorView = textTypeButton
-        show()
     }
+
+    private fun brushTypeButtonClicked() = brushTypePopup.show()
+
+
+    private val textTypePopup by lazy {
+        ListPopupWindow(context).apply {
+            setAdapter(object : BaseAdapter() {
+                override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+                    val view = convertView ?: LayoutInflater.from(context)
+                        .inflate(R.layout.item_text_type, parent, false)
+
+                    val stroke = position == 0
+
+                    view.findViewById<FrameLayout>(R.id.text_place).apply {
+                        removeAllViews()
+                        isFocusable = true
+                        addView(EditTextOutline(context).apply {
+                            setBackgroundColor(Color.TRANSPARENT)
+                            isEnabled = false
+                            isClickable = false
+                            isFocusable = false
+                            isFocusableInTouchMode = false
+                            setStrokeWidth(resources.getDimension(R.dimen.width_stroke_text_type))
+                            setTextColor(if (stroke) Color.WHITE else Color.BLACK)
+                            setStrokeColor(if (stroke) Color.BLACK else Color.TRANSPARENT)
+                            setPadding(0, 0, 0, 0)
+                            setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
+                            setTypeface(null, Typeface.BOLD)
+                            setText(if (stroke) R.string.outlined else R.string.regular)
+                        }, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
+                    }
+                    view.findViewById<RadioButton>(R.id.radio).isChecked =
+                        boundPaintRenderView?.selectedStroke == stroke
+                    view.setOnClickListener {
+                        boundPaintRenderView?.setStroke(stroke)
+                        dismiss()
+                    }
+                    return view
+                }
+
+                override fun getItem(position: Int): Any? = null
+
+                override fun getItemId(position: Int): Long = position.toLong()
+
+                override fun getCount(): Int = 2
+            })
+            setContentWidth(resources.getDimensionPixelSize(R.dimen.width_brush_item))
+            anchorView = textTypeButton
+        }
+    }
+
+    private fun textTypeButtonClicked() = textTypePopup.show()
 
 }

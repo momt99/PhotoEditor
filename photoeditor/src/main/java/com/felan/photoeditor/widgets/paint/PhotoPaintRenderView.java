@@ -31,7 +31,7 @@ import com.felan.photoeditor.utils.FileLog;
 import com.felan.photoeditor.utils.SizeFX;
 
 @SuppressLint("NewApi")
-public class PhotoPaintView extends FrameLayout implements EntityView.EntityViewDelegate {
+public class PhotoPaintRenderView extends FrameLayout implements EntityView.EntityViewDelegate {
 
     private Bitmap bitmapToEdit;
     private int orientation;
@@ -78,7 +78,7 @@ public class PhotoPaintView extends FrameLayout implements EntityView.EntityView
 
 //    private final static int gallery_menu_done = 1;
 
-    public PhotoPaintView(Context context, Bitmap bitmap, int rotation) {
+    public PhotoPaintRenderView(Context context, Bitmap bitmap, int rotation) {
         super(context);
 
         AndroidUtilities.density = context.getResources().getDisplayMetrics().density;
@@ -806,6 +806,8 @@ public class PhotoPaintView extends FrameLayout implements EntityView.EntityView
     }
 
     public boolean getSelectedStroke() {
+        if (currentEntityView instanceof TextPaintView)
+            return ((TextPaintView) currentEntityView).getStroke();
         return selectedStroke;
     }
 
