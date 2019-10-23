@@ -105,6 +105,7 @@ class PhotoEditView @JvmOverloads constructor(
     }
 
     private fun switchToNormalMode() {
+        (currentEditor as? PhotoPaintView)?.shutdown()
         controlsContainer.removeView(currentEditor as View)
         doneCancelContainer.visibility = View.GONE
         imageView.visibility = View.VISIBLE

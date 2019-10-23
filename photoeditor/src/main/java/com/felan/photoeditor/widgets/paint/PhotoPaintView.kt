@@ -36,6 +36,10 @@ class PhotoPaintView @JvmOverloads constructor(
         addView(controlsContainer, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
     }
 
+    fun shutdown() {
+        paintRenderView.shutdown()
+    }
+
     override fun setImage(image: Bitmap) {
         imageViewPlace.removeAllViews()
         paintRenderView = PhotoPaintRenderView(context, image, 0)
