@@ -12,6 +12,7 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.core.widget.CompoundButtonCompat;
 
 import com.felan.photoeditor.R;
+import com.google.android.material.radiobutton.MaterialRadioButton;
 
 import java.nio.ByteBuffer;
 
@@ -35,7 +36,7 @@ public class Utilities {
             LinearLayout item = new LinearLayout(context);
             item.setOrientation(LinearLayout.VERTICAL);
             item.setGravity(Gravity.CENTER);
-            AppCompatRadioButton radio = new AppCompatRadioButton(context);
+            MaterialRadioButton radio = new MaterialRadioButton(context);
             if (colors != null)
                 CompoundButtonCompat.setButtonTintList(radio, ColorStateList.valueOf(colors[i]));
             item.addView(radio, new LinearLayout.MarginLayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));

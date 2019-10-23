@@ -5,14 +5,14 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.felan.photoeditor.R
+import com.felan.photoeditor.widgets.PhotoEditor
 
 class PhotoPaintView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr) {
+) : FrameLayout(context, attrs, defStyleAttr), PhotoEditor {
 
     private val controlsContainer by lazy {
         LayoutInflater.from(context).inflate(
@@ -26,6 +26,8 @@ class PhotoPaintView @JvmOverloads constructor(
         controlsContainer.findViewById<FrameLayout>(R.id.fl_image_place)
     }
 
+    private lateinit var paintRenderView: PhotoPaintRenderView
+
     private val controls by lazy {
         controlsContainer.findViewById<PaintControlsView>(R.id.controls_paint)
     }
@@ -34,15 +36,19 @@ class PhotoPaintView @JvmOverloads constructor(
         addView(controlsContainer, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
     }
 
-    fun setImage(bitmap: Bitmap) {
-        val paintRenderView = PhotoPaintRenderView(context, bitmap, 0)
+    override fun setImage(image: Bitmap) {
         imageViewPlace.removeAllViews()
+        paintRenderView = PhotoPaintRenderView(context, image, 0)
+        paintRenderView.init()
         imageViewPlace.addView(
             paintRenderView,
             LayoutParams.MATCH_PARENT,
             LayoutParams.MATCH_PARENT
         )
-        paintRenderView.init()
         controls.bindWith(paintRenderView)
     }
+
+    override fun getResultImage(): Bitmap =
+        paintRenderView.resultBitmap
+
 }

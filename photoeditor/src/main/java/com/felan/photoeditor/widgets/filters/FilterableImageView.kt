@@ -8,12 +8,13 @@ import android.graphics.SurfaceTexture
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.TextureView
+import android.view.View
 import android.widget.FrameLayout
 import androidx.annotation.ColorInt
 import androidx.core.view.updateLayoutParams
 import com.felan.photoeditor.R
-import com.felan.photoeditor.utils.EventHandler
 import com.felan.photoeditor.utils.RangedProperty
+import com.felan.photoeditor.utils.ReplayEventHandler
 import com.felan.photoeditor.utils.SizeX
 import kotlin.math.PI
 import kotlin.properties.ReadWriteProperty
@@ -25,108 +26,122 @@ class FilterableImageView @kotlin.jvm.JvmOverloads constructor(
 
     //region Adjust values
 
-    var enhanceValue: Float by AdjustParamProperty(
+    private val enhanceValue_delegate = AdjustParamProperty(
         0f,
         0f,
         100f,
         R.string.label_enhance
     ) //0 100
 
+    var enhanceValue: Float by enhanceValue_delegate
 
-    var exposureValue: Float by AdjustParamProperty(
+
+    private val exposureValue_delegate = AdjustParamProperty(
         0f,
         -100f,
         100f,
         R.string.label_exposure
-    ) //-100 100
+    )
+    var exposureValue: Float by exposureValue_delegate //-100 100
 
 
-    var contrastValue: Float by AdjustParamProperty(
+    private val contrastValue_delegate = AdjustParamProperty(
         0f,
         -100f,
         100f,
         R.string.label_contrast
-    ) //-100 100
+    )
+    var contrastValue: Float by contrastValue_delegate //-100 100
 
 
-    var warmthValue: Float by AdjustParamProperty(
+    private val warmthValue_delegate = AdjustParamProperty(
         0f,
         -100f,
         100f,
         R.string.label_warmth
-    ) //-100 100
+    )
+    var warmthValue: Float by warmthValue_delegate //-100 100
 
 
-    var saturationValue: Float by AdjustParamProperty(
+    private val saturationValue_delegate = AdjustParamProperty(
         0f,
         -100f,
         100f,
         R.string.label_saturation
-    ) //-100 100
+    )
+    var saturationValue: Float by saturationValue_delegate //-100 100
 
 
-    var fadeValue: Float by AdjustParamProperty(
+    val fadeValue_delegate = AdjustParamProperty(
         0f,
         0f,
         100f,
         R.string.label_fade
-    ) // 0 100
+    )
+    var fadeValue: Float by fadeValue_delegate // 0 100
 
 
-    @get: ColorInt
-    var tintShadowsColor: Int by AdjustParamProperty(
+    val tintShadowColor_delegate = AdjustParamProperty(
         Color.TRANSPARENT,
         Int.MIN_VALUE,
         Int.MAX_VALUE
-    ) //0 0xffffffff
-
-
+    )
     @get: ColorInt
-    var tintHighlightsColor: Int by AdjustParamProperty(
+    var tintShadowsColor: Int by tintShadowColor_delegate //0 0xffffffff
+
+
+    val tintHighlightColor_delegate = AdjustParamProperty(
         Color.TRANSPARENT,
         Int.MIN_VALUE,
         Int.MAX_VALUE
-    ) //0 0xffffffff
+    )
+    @get: ColorInt
+    var tintHighlightsColor: Int by tintHighlightColor_delegate //0 0xffffffff
 
 
-    var highlightsValue: Float by AdjustParamProperty(
+    val highlightsValue_delegate = AdjustParamProperty(
         0f,
         -100f,
         100f,
         R.string.label_highlights
-    ) //-100 100
+    )
+    var highlightsValue: Float by highlightsValue_delegate //-100 100
 
 
-    var shadowsValue: Float by AdjustParamProperty(
+    private val shadowsValue_delegate = AdjustParamProperty(
         0f,
         -100f,
         100f,
         R.string.label_shadows
-    ) //-100 100
+    )
+    var shadowsValue: Float by shadowsValue_delegate //-100 100
 
 
-    var vignetteValue: Float by AdjustParamProperty(
+    private val vignetteValue_delegate = AdjustParamProperty(
         0f,
         0f,
         100f,
         R.string.label_vignette
-    ) //0 100
+    )
+    var vignetteValue: Float by vignetteValue_delegate //0 100
 
 
-    var grainValue: Float by AdjustParamProperty(
+    val grainValue_delegate = AdjustParamProperty(
         0f,
         0f,
         100f,
         R.string.label_grain
-    ) //0 100
+    )
+    var grainValue: Float by grainValue_delegate //0 100
 
 
-    var sharpenValue: Float by AdjustParamProperty(
+    val sharpenValue_delegate = AdjustParamProperty(
         0f,
         0f,
         100f,
         R.string.label_sharpen
-    ) //0 100
+    )
+    var sharpenValue: Float by sharpenValue_delegate //0 100
 
 
     //endregion
@@ -162,15 +177,34 @@ class FilterableImageView @kotlin.jvm.JvmOverloads constructor(
 
     private val textureContainer: FrameLayout
 
-    private val layoutChangeListener =
-        OnLayoutChangeListener { _, left, top, right, bottom, _, _, _, _ ->
-            updateTextureViewSize(right - left, bottom - top)
+    private val layoutChangeListener = object : OnLayoutChangeListener {
+        private var lastWidth = -1
+        private var lastHeight = -1
+
+        override fun onLayoutChange(
+            v: View?,
+            left: Int,
+            top: Int,
+            right: Int,
+            bottom: Int,
+            oldLeft: Int,
+            oldTop: Int,
+            oldRight: Int,
+            oldBottom: Int
+        ) {
+            val newWidth = right - left
+            val newHeight = bottom - top
+            if (newWidth != lastWidth || newHeight != lastHeight) {
+                updateTextureViewSize(newWidth, newHeight)
+                lastWidth = newWidth
+                lastHeight = newHeight
+            }
         }
+    }
 
     init {
         textureView = TextureView(context).apply {
             surfaceTextureListener = this@FilterableImageView
-            isOpaque = true
         }
         textureContainer = FrameLayout(context).apply {
             addView(
@@ -239,7 +273,12 @@ class FilterableImageView @kotlin.jvm.JvmOverloads constructor(
         }
     }
 
-    val textureSizeChanged = EventHandler<SizeX>()
+    val textureSizeChanged = ReplayEventHandler<SizeX>()
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        updateTextureViewSize(w, h)
+    }
 
     private fun updateTextureViewSize(width: Int, height: Int) {
         image?.let { img ->
@@ -254,13 +293,12 @@ class FilterableImageView @kotlin.jvm.JvmOverloads constructor(
                     this.height = (img.height * scaleX).toInt()
                 }
             }
-
             textureSizeChanged(textureViewSize)
         }
     }
 
     val textureViewSize
-        get() = SizeX(textureView.width, textureView.height)
+        get() = SizeX(textureView.layoutParams.width, textureView.layoutParams.height)
 
 
     private var requestRenderEnabled = true
@@ -275,6 +313,26 @@ class FilterableImageView @kotlin.jvm.JvmOverloads constructor(
         transaction(this)
         requestRenderEnabled = true
         requestRender()
+    }
+
+    val resultBitmap: Bitmap?
+        get() = if (eglThread != null) eglThread!!.texture else null
+
+    //We do this only for the huge overhead of reflection
+    fun getAllPropertyDelegates(): Array<AdjustParamProperty<Float>> {
+        return arrayOf(
+            enhanceValue_delegate,
+            exposureValue_delegate,
+            contrastValue_delegate,
+            warmthValue_delegate,
+            saturationValue_delegate,
+            fadeValue_delegate,
+            vignetteValue_delegate,
+            grainValue_delegate,
+            sharpenValue_delegate,
+            shadowsValue_delegate,
+            highlightsValue_delegate
+        )
     }
 }
 
@@ -292,13 +350,19 @@ open class RequestRenderProperty<T>(initialValue: T) :
     ReadWriteProperty<FilterableImageView, T> {
     private var value: T = initialValue
 
-    override fun getValue(thisRef: FilterableImageView, property: KProperty<*>): T = value
+    fun getValue(): T = value
 
-    override fun setValue(thisRef: FilterableImageView, property: KProperty<*>, value: T) {
+    override fun getValue(thisRef: FilterableImageView, property: KProperty<*>): T = getValue()
+
+    fun setValue(thisRef: FilterableImageView, value: T) {
         if (value == this.value)
             return
 
         this.value = value
         thisRef.requestRender()
     }
+
+    override fun setValue(thisRef: FilterableImageView, property: KProperty<*>, value: T) =
+        setValue(thisRef, value)
+
 }

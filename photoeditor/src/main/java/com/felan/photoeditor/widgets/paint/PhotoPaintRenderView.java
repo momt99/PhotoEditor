@@ -334,11 +334,12 @@ public class PhotoPaintRenderView extends FrameLayout implements EntityView.Enti
     }
 
     public Bitmap getResultBitmap() {
-        Bitmap bitmap = renderView.getResultBitmap();
+//        Bitmap bitmap = renderView.getResultBitmap();
+        Bitmap bitmap = renderView.getBitmap();
         if (bitmap != null && entitiesView.entitiesCount() > 0) {
             android.graphics.Canvas canvas = new android.graphics.Canvas(bitmap);
-            canvas.save();
-            canvas.scale(entitiesView.getWidth() / paintingSize.width, entitiesView.getHeight() / paintingSize.height);
+//            canvas.save();
+//            canvas.scale(paintingSize.width / entitiesView.getWidth(), paintingSize.height / entitiesView.getHeight());
             for (int i = 0; i < entitiesView.getChildCount(); i++) {
                 View v = entitiesView.getChildAt(i);
                 canvas.save();
@@ -365,7 +366,7 @@ public class PhotoPaintRenderView extends FrameLayout implements EntityView.Enti
                         v.draw(canvas);
                     }
                 }
-                canvas.restore();
+//                canvas.restore();
             }
         }
         return bitmap;

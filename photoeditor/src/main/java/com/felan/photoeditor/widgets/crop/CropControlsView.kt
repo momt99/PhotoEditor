@@ -76,6 +76,7 @@ class CropControlsView @JvmOverloads constructor(
 
 
     private fun onRotateButtonClicked() {
+        rotationWheel.value = 0f
         boundCropView?.rotate90Degrees()
     }
 

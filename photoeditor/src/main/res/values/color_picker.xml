@@ -14,7 +14,7 @@
 
     <style name="MyColorPickerDefaultStyle">
         <item name="barHeight">12dp</item>
-        <item name="thumbBackgroundColor">?colorSurface</item>
+        <item name="thumbBackgroundColor">?colorOnSurface</item>
         <item name="thumbRadius">12dp</item>
         <item name="thumbColorMaxRadiusFactor">0.9</item>
         <item name="thumbColorMinRadiusFactor">0.1</item>

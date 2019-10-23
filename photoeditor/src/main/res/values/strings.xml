@@ -34,6 +34,8 @@
     <string name="outlined">Outlined</string>
     <string name="regular">Regular</string>
     <string name="reset">Reset</string>
+    <string name="cancel">Cancel</string>
+    <string name="done">Done</string>
 
     <string-array name="aspect_ratios">
         <item>0:1</item>

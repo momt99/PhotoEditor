@@ -5,7 +5,7 @@
 
     </style>
 
-    <style name="IconButton" parent="ControlButtonStyle">
+    <style name="IconButton" parent="Widget.AppCompat.Button.Borderless">
         <item name="android:minWidth">0dp</item>
         <item name="tint">@color/secondary_selected</item>
     </style>

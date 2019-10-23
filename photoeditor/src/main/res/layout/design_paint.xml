@@ -4,6 +4,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+
     <FrameLayout
             android:id="@+id/fl_image_place"
             android:layout_width="match_parent"
@@ -13,6 +14,7 @@
     <com.felan.photoeditor.widgets.paint.PaintControlsView
             android:id="@+id/controls_paint"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/height_controls"
+            android:layout_height="300dp"
             android:layout_gravity="bottom" />
+
 </FrameLayout>

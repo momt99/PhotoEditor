@@ -22,7 +22,9 @@ import com.felan.photoeditor.utils.setOnEndListener
 import com.felan.photoeditor.widgets.Bindable
 import com.felan.photoeditor.widgets.MySeekBar
 import kotlin.reflect.KMutableProperty1
+import kotlin.reflect.KProperty
 import kotlin.reflect.jvm.isAccessible
+import kotlin.system.measureTimeMillis
 
 class PhotoAdjustControlsView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -61,25 +63,22 @@ class PhotoAdjustControlsView @JvmOverloads constructor(
             LayoutParams.MATCH_PARENT,
             resources.getDimensionPixelSize(R.dimen.height_adjust_item)
         )
-        arrayOf(
-            FilterableImageView::enhanceValue,
-            FilterableImageView::exposureValue,
-            FilterableImageView::contrastValue,
-            FilterableImageView::warmthValue,
-            FilterableImageView::saturationValue,
-            FilterableImageView::fadeValue,
-            FilterableImageView::vignetteValue,
-            FilterableImageView::grainValue,
-            FilterableImageView::sharpenValue
-        ).forEach { prop ->
+
+        val allPropertyDelegates = img.getAllPropertyDelegates()
+
+        allPropertyDelegates.asSequence().take(9).forEach { delegate ->
             mainContainer.addView(
-                createSeekBarForProperty(prop, img),
+                createSeekBarForProperty(delegate, img),
                 ViewGroup.LayoutParams(lp)
             )
         }
 
         mainContainer.addView(
-            createSeekBarForProperty(FilterableImageView::shadowsValue, img, R.id.shadows_control),
+            createSeekBarForProperty(
+                allPropertyDelegates[9],
+                img,
+                R.id.shadows_control
+            ),
             ViewGroup.LayoutParams(lp)
         )
         mainContainer.addView(
@@ -95,7 +94,7 @@ class PhotoAdjustControlsView @JvmOverloads constructor(
 
         mainContainer.addView(
             createSeekBarForProperty(
-                FilterableImageView::highlightsValue,
+                allPropertyDelegates[10],
                 img,
                 R.id.highlights_control
             ),
@@ -114,16 +113,16 @@ class PhotoAdjustControlsView @JvmOverloads constructor(
     }
 
     private fun createSeekBarForProperty(
-        property: KMutableProperty1<FilterableImageView, Float>,
+        delegate: AdjustParamProperty<Float>,
         img: FilterableImageView,
         layoutId: Int = 0
     ): View =
         LayoutInflater.from(context).inflate(R.layout.design_adjust_item, this, false).apply {
             if (layoutId != 0)
                 id = layoutId
-            property.isAccessible = true
+            val fakeProperty: KProperty<*> =
+                PhotoAdjustControlsView::boundFilterableImageView //Just to pass it to the delegate
             @Suppress("UNCHECKED_CAST")
-            val delegate = property.getDelegate(img) as AdjustParamProperty<Float>
 
             val tvLabel = findViewById<TextView>(R.id.tv_label).apply {
                 setText(delegate.labelResource)
@@ -138,10 +137,10 @@ class PhotoAdjustControlsView @JvmOverloads constructor(
                 if (min < 0)
                     enableMiddlePoint = true
                 progressChanged += { args ->
-                    property.set(img, args.progress)
+                    delegate.setValue(img, fakeProperty, args.progress)
                     tvValue.text = String.format("%+.0f", args.progress)
                 }
-                progress = property.get(img)
+                progress = delegate.getValue(img, fakeProperty)
                 pressedChanged += { pressed ->
                     if (pressed) {
                         tvLabel.startAnimation(textHideAnimation)

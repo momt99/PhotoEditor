@@ -3,15 +3,17 @@ package com.felan.photoeditor.widgets.filters
 import android.content.Context
 import android.graphics.Bitmap
 import android.util.AttributeSet
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.felan.photoeditor.R
+import com.felan.photoeditor.widgets.PhotoEditor
 
 class PhotoFilterView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr) {
+) : FrameLayout(context, attrs, defStyleAttr), PhotoEditor {
 
     private val controlsContainer by lazy {
         LayoutInflater.from(context).inflate(
@@ -21,25 +23,54 @@ class PhotoFilterView @JvmOverloads constructor(
         ) as ViewGroup
     }
 
+    private val imagePlace by lazy {
+        controlsContainer.findViewById<FrameLayout>(R.id.fl_image_place)
+    }
+
     private val imageView by lazy {
         controlsContainer.findViewById<FilterableImageView>(R.id.image)
     }
 
+    private val allControls = MutableList<FilterControlsView?>(3) { null }
+
     private val adjustControls by lazy {
-        controlsContainer.findViewById<PhotoAdjustControlsView>(R.id.controls_adjust)
+        //        controlsContainer.findViewById<PhotoAdjustControlsView>(R.id.controls_adjust)
+        val control = PhotoAdjustControlsView(context)
+        control.bindWith(imageView)
+        imagePlace.addView(
+            control,
+            LayoutParams(
+                LayoutParams.MATCH_PARENT,
+                resources.getDimensionPixelSize(R.dimen.height_controls),
+                Gravity.BOTTOM
+            )
+        )
+        allControls[0] = control
+        control
     }
-
+    //
     private val blurControls by lazy {
-        controlsContainer.findViewById<BlurControlsView>(R.id.controls_blur)
+        //        controlsContainer.findViewById<BlurControlsView>(R.id.controls_blur)
+        val control = BlurControlsView(context)
+        control.bindWith(imageView)
+        imagePlace.addView(control, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+        allControls[1] = control
+        control
     }
-
+    //
     private val curveControls by lazy {
-        controlsContainer.findViewById<CurveControlsView>(R.id.controls_curve)
+        //        controlsContainer.findViewById<CurveControlsView>(R.id.controls_curve)
+        val control = CurveControlsView(context)
+        control.bindWith(imageView)
+        imagePlace.addView(control, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+        allControls[2] = control
+        control
     }
 
-    private val allControls by lazy {
-        arrayOf<FilterControlsView>(adjustControls, blurControls, curveControls)
-    }
+//    private val allControls by lazy {
+//        arrayOf<FilterControlsView>(adjustControls, blurControls, curveControls)
+//    }
+
 
     private val allButtons by lazy {
         arrayOf<View>(
@@ -50,7 +81,7 @@ class PhotoFilterView @JvmOverloads constructor(
     }
 
     init {
-        allControls.forEach { it.bindWith(imageView) }
+//        allControls.forEach { it.bindWith(imageView) }
         allButtons.forEachIndexed { i, it ->
             it.setOnClickListener { onControlSelectButtonClicked(i) }
         }
@@ -63,10 +94,21 @@ class PhotoFilterView @JvmOverloads constructor(
 
     private fun onControlSelectButtonClicked(index: Int) {
         allButtons.forEachIndexed { i, it -> it.isSelected = i == index }
-        allControls.forEachIndexed { i, it -> it.visibility = if (i == index) VISIBLE else GONE }
+        if (allControls[index] == null)
+            allControls[index] = when (index) {
+                0 -> adjustControls
+                1 -> blurControls
+                2 -> curveControls
+                else -> null
+            }
+        allControls.forEachIndexed { i, it -> it?.visibility = if (i == index) VISIBLE else GONE }
     }
 
-    fun setImage(bitmap: Bitmap) {
-        imageView.image = bitmap
+    override fun setImage(image: Bitmap) {
+        imageView.image = image
     }
+
+    override fun getResultImage(): Bitmap? =
+        imageView.resultBitmap
+
 }

@@ -6,6 +6,7 @@
         android:orientation="vertical">
 
     <FrameLayout
+            android:id="@+id/fl_image_place"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
@@ -17,24 +18,24 @@
                 android:layout_marginBottom="@dimen/height_controls"
                 android:padding="@dimen/margin_normal" />
 
-        <com.felan.photoeditor.widgets.filters.PhotoAdjustControlsView
-                android:id="@+id/controls_adjust"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/height_controls"
-                android:layout_gravity="bottom"
-                android:visibility="visible" />
+        <!--        <com.felan.photoeditor.widgets.filters.PhotoAdjustControlsView-->
+        <!--                android:id="@+id/controls_adjust"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="@dimen/height_controls"-->
+        <!--                android:layout_gravity="bottom"-->
+        <!--                android:visibility="visible" />-->
 
-        <com.felan.photoeditor.widgets.filters.BlurControlsView
-                android:id="@+id/controls_blur"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone" />
+        <!--        <com.felan.photoeditor.widgets.filters.BlurControlsView-->
+        <!--                android:id="@+id/controls_blur"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="match_parent"-->
+        <!--                android:visibility="gone" />-->
 
-        <com.felan.photoeditor.widgets.filters.CurveControlsView
-                android:id="@+id/controls_curve"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone" />
+        <!--        <com.felan.photoeditor.widgets.filters.CurveControlsView-->
+        <!--                android:id="@+id/controls_curve"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="match_parent"-->
+        <!--                android:visibility="gone" />-->
 
     </FrameLayout>
 

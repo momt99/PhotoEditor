@@ -1,19 +1,17 @@
 package com.felan.photoeditor.widgets.crop
 
-import com.felan.photoeditor.widgets.filters.*
-
 import android.content.Context
 import android.graphics.Bitmap
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.felan.photoeditor.R
+import com.felan.photoeditor.widgets.PhotoEditor
 
 class PhotoCropView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr) {
+) : FrameLayout(context, attrs, defStyleAttr), PhotoEditor {
 
     private val controlsContainer by lazy {
         LayoutInflater.from(context).inflate(
@@ -37,7 +35,10 @@ class PhotoCropView @JvmOverloads constructor(
         addView(controlsContainer, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
     }
 
-    fun setImage(bitmap: Bitmap) {
-        imageView.setBitmap(bitmap, 0, true, false)
+    override fun setImage(image: Bitmap) {
+        imageView.setBitmap(image, 0, true, false)
     }
+
+    override fun getResultImage(): Bitmap? =
+        imageView.resultImage
 }
