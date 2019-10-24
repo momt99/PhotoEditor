@@ -62,15 +62,13 @@ class CropControlsView @JvmOverloads constructor(
         initRotationWheel()
     }
 
-    private fun initRotationWheel() {
-        with(rotationWheel)
-        {
-            rotationStarted += { boundCropView?.onRotationBegan() }
-            rotationEnded += { boundCropView?.onRotationEnded() }
-            valueChanged += {
-                rotationTextView.text = "%.1f °".format(it)
-                boundCropView?.setImageRotation(it)
-            }
+    private fun initRotationWheel() = with(rotationWheel)
+    {
+        rotationStarted += { boundCropView?.onRotationBegan() }
+        rotationEnded += { boundCropView?.onRotationEnded() }
+        valueChanged += {
+            rotationTextView.text = "%.1f °".format(it)
+            boundCropView?.setImageRotation(it)
         }
     }
 
