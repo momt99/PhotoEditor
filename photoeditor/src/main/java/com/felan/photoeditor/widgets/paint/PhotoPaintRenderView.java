@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Looper;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -223,13 +224,13 @@ public class PhotoPaintRenderView extends FrameLayout implements EntityView.Enti
                     EntityView entity = (EntityView) v;
 
                     canvas.translate(entity.getPosition().x, entity.getPosition().y);
-                    canvas.scale(v.getScaleX(), v.getScaleY());
                     canvas.rotate(v.getRotation());
-                    canvas.translate(-entity.getWidth() / 2, -entity.getHeight() / 2);
+                    canvas.translate(-entity.getWidth() * entity.getScaleX() / 2, -entity.getHeight() * entity.getScaleY() / 2);
 
                     if (v instanceof TextPaintView) {
-                        Bitmap b = createBitmap(v.getWidth(), v.getHeight(), Bitmap.Config.ARGB_8888);
+                        Bitmap b = createBitmap(getResources().getDisplayMetrics(), (int) (v.getWidth() * v.getScaleX()), (int) (v.getHeight() * v.getScaleY()), Bitmap.Config.ARGB_8888);
                         Canvas c = new Canvas(b);
+                        c.scale(v.getScaleX(), v.getScaleY());
                         v.draw(c);
                         canvas.drawBitmap(b, null, new Rect(0, 0, b.getWidth(), b.getHeight()), null);
                         try {
@@ -242,18 +243,18 @@ public class PhotoPaintRenderView extends FrameLayout implements EntityView.Enti
                         v.draw(canvas);
                     }
                 }
-//                canvas.restore();
+                canvas.restore();
             }
         }
         return bitmap;
     }
 
-    public static Bitmap createBitmap(int width, int height, Bitmap.Config config) {
+    public static Bitmap createBitmap(DisplayMetrics metrics, int width, int height, Bitmap.Config config) {
         Bitmap bitmap;
         if (Build.VERSION.SDK_INT < 21) {
-            bitmap = Bitmap.createBitmap(width, height, config);
+            bitmap = Bitmap.createBitmap(metrics, width, height, config);
         } else {
-            bitmap = Bitmap.createBitmap(width, height, config);
+            bitmap = Bitmap.createBitmap(metrics, width, height, config);
         }
         if (config == Bitmap.Config.ARGB_8888 || config == Bitmap.Config.ARGB_4444) {
             bitmap.eraseColor(Color.TRANSPARENT);
