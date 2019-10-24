@@ -52,8 +52,8 @@ public class CropAreaView extends View {
     private Control activeControl;
     private RectF actualRect = new RectF();
     private RectF tempRect = new RectF();
-    private float startX;
-    private float startY;
+    private int previousX;
+    private int previousY;
 
     private float bottomPadding;
     private boolean dimVisibile;
@@ -276,7 +276,6 @@ public class CropAreaView extends View {
 
                 }
             }
-            //Strange because it could easily use clear xfere
             canvas.drawRect(0, 0, getWidth(), (int) actualRect.top, dimPaint);
             canvas.drawRect(0, (int) actualRect.top, (int) actualRect.left, (int) actualRect.bottom, dimPaint);
             canvas.drawRect((int) actualRect.right, (int) actualRect.top, getWidth(), (int) actualRect.bottom, dimPaint);
@@ -498,11 +497,10 @@ public class CropAreaView extends View {
         rect.set(left, top, right, bottom);
     }
 
-    private RectF startRect = new RectF();
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        float x = (event.getX() - ((ViewGroup) getParent()).getX());
-        float y = (event.getY() - ((ViewGroup) getParent()).getY());
+        int x = (int) (event.getX() - ((ViewGroup) getParent()).getX());
+        int y = (int) (event.getY() - ((ViewGroup) getParent()).getY());
 
         float statusBarHeight = (Build.VERSION.SDK_INT >= 21 ? AndroidUtilities.statusBarHeight : 0);
 
@@ -534,9 +532,8 @@ public class CropAreaView extends View {
                 activeControl = Control.NONE;
                 return false;
             }
-            startX = x;
-            startY = y;
-            startRect.set(actualRect);
+            previousX = x;
+            previousY = y;
             setGridType(GridType.MAJOR, false);
 
             isDragging = true;
@@ -561,12 +558,12 @@ public class CropAreaView extends View {
             if (activeControl == Control.NONE)
                 return false;
 
-            tempRect.set(startRect);
+            tempRect.set(actualRect);
 
-            float translationX = x - startX;
-            float translationY = y - startY;
-//            startX = x;
-//            startY = y;
+            float translationX = x - previousX;
+            float translationY = y - previousY;
+            previousX = x;
+            previousY = y;
 
             switch (activeControl) {
                 case TOP_LEFT:
@@ -574,16 +571,17 @@ public class CropAreaView extends View {
                     tempRect.top += translationY;
 
                     if (lockAspectRatio > 0) {
-                        System.out.println("tempRect.left = " + tempRect.left);
-                        System.out.println("tempRect.top = " + tempRect.top);
-                        constrainRectStatic(tempRect, lockAspectRatio, Math.abs(translationX) > Math.abs(translationY), HorizontalStaticPart.RIGHT, VerticalStaticPart.BOTTOM);
-//                        if () {
-//                            constrainRectByWidth(tempRect, lockAspectRatio);
-//
-//                        } else {
-//                            tempRect.top += translationY;
-//                            constrainRectByHeight(tempRect, lockAspectRatio);
-//                        }
+                        float w = tempRect.width();
+                        float h = tempRect.height();
+
+                        if (Math.abs(translationX) > Math.abs(translationY)) {
+                            constrainRectByWidth(tempRect, lockAspectRatio);
+                        } else {
+                            constrainRectByHeight(tempRect, lockAspectRatio);
+                        }
+
+                        tempRect.left -= tempRect.width() - w;
+                        tempRect.top -= tempRect.width() - h;
                     }
                     break;
 
@@ -735,35 +733,6 @@ public class CropAreaView extends View {
 
         rect.right = rect.left + w;
         rect.bottom = rect.top + h;
-    }
-
-    private enum HorizontalStaticPart {
-        LEFT, RIGHT
-    }
-
-    private enum VerticalStaticPart {
-        TOP, BOTTOM
-    }
-
-    private void constrainRectStatic(RectF rect, float aspectRatio, boolean byWidth, HorizontalStaticPart hStatic, VerticalStaticPart vStatic) {
-        float w, h;
-        if (byWidth) {
-            w = rect.width();
-            h = w / aspectRatio;
-        } else {
-            h = rect.height();
-            w = h * aspectRatio;
-        }
-
-        if (hStatic == HorizontalStaticPart.LEFT)
-            rect.right = rect.left + w;
-        else
-            rect.left = rect.right - w;
-
-        if (vStatic == VerticalStaticPart.TOP)
-            rect.bottom = rect.top + h;
-        else
-            rect.top = rect.bottom - h;
     }
 
     private void constrainRectByHeight(RectF rect, float aspectRatio) {
